@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.grey,
       ),
+      debugShowCheckedModeBanner: false,
       home: const GameScreen(),
     );
   }

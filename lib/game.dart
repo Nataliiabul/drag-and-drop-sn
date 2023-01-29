@@ -55,9 +55,9 @@ class _GameScreenState extends State<GameScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.mainColor,
         title: const Text(
-          'Drag&Drop',
+          'Drag&Drop Game',
           style: TextStyle(
-            color: Colors.white,
+            color: Color(0xFF78A1BB),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -141,10 +141,9 @@ class _GameScreenState extends State<GameScreen> {
                         });
                       },
                       builder: (context, candidateData, rejectedData) =>
-                          Container(
-                        color: socialItem.accepting
-                            ? AppColors.secondColor.withOpacity(0.3)
-                            : AppColors.secondColor,
+                          AnimatedContainer(
+                        duration: Duration(milliseconds: 350),
+                        curve: Curves.easeOut,
                         height: 55,
                         width: 110,
                         alignment: Alignment.center,
@@ -155,6 +154,14 @@ class _GameScreenState extends State<GameScreen> {
                             color: Color(0xFF283044),
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                          color: socialItem.accepting
+                              ? AppColors.secondColor.withOpacity(0.3)
+                              : AppColors.secondColor,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
                           ),
                         ),
                       ),
@@ -187,6 +194,11 @@ class _GameScreenState extends State<GameScreen> {
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
                     vertical: 7,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
                   ),
                 ),
               ),
