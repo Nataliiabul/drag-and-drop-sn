@@ -1,8 +1,8 @@
+import 'package:drag_and_drop_social_networks/style/colors.dart';
 import 'package:flutter/material.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:drag_and_drop_social_networks/assets/colors.dart';
 import 'package:drag_and_drop_social_networks/models/social_model.dart';
 
 class GameScreen extends StatefulWidget {
