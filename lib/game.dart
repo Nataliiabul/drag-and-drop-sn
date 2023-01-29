@@ -142,12 +142,20 @@ class _GameScreenState extends State<GameScreen> {
                       },
                       builder: (context, candidateData, rejectedData) =>
                           AnimatedContainer(
-                        duration: Duration(milliseconds: 350),
+                        duration: const Duration(milliseconds: 350),
                         curve: Curves.easeOut,
                         height: 55,
                         width: 110,
                         alignment: Alignment.center,
                         margin: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: socialItem.accepting
+                              ? AppColors.secondColor.withOpacity(0.3)
+                              : AppColors.secondColor,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
                         child: Text(
                           socialItem.name,
                           style: const TextStyle(
@@ -156,21 +164,13 @@ class _GameScreenState extends State<GameScreen> {
                             fontSize: 18,
                           ),
                         ),
-                        decoration: BoxDecoration(
-                          color: socialItem.accepting
-                              ? AppColors.secondColor.withOpacity(0.3)
-                              : AppColors.secondColor,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                        ),
                       ),
                     );
                   }).toList(),
                 ),
               ],
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
 
             // restart button
             if (restart)
@@ -181,13 +181,6 @@ class _GameScreenState extends State<GameScreen> {
                     initGame();
                   });
                 },
-                child: Text(
-                  'Restart',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.secondColor,
                   foregroundColor: AppColors.mainColor,
@@ -195,10 +188,17 @@ class _GameScreenState extends State<GameScreen> {
                     horizontal: 20,
                     vertical: 7,
                   ),
-                  shape: RoundedRectangleBorder(
+                  shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
                     ),
+                  ),
+                ),
+                child: const Text(
+                  'Restart',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
