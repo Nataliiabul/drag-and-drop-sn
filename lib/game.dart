@@ -15,6 +15,8 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   late List<SocialItemModel> socialItems;
   late List<SocialItemModel> socialItems2;
+  late int score;
+  late bool restart;
 
   @override
   void initState() {
@@ -23,6 +25,8 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   initGame() {
+    score = 0;
+    restart = false;
     socialItems = [
       SocialItemModel(
           name: 'Google', value: 'Google', icon: FontAwesomeIcons.google),
@@ -43,6 +47,9 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (socialItems.length == 0) {
+      restart = true;
+    }
     return Scaffold(
       backgroundColor: AppColors.mainColor,
       appBar: AppBar(
@@ -58,9 +65,20 @@ class _GameScreenState extends State<GameScreen> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(15),
+
         // main column
         child: Column(
           children: [
+            Text(
+              'Score: $score',
+              style: TextStyle(
+                color: AppColors.secondColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+              ),
+            ),
+            SizedBox(height: 15),
+
             // row with matching columns
             Row(
               children: [
@@ -69,37 +87,109 @@ class _GameScreenState extends State<GameScreen> {
                   children: socialItems.map((socialItem) {
                     return Container(
                       margin: const EdgeInsets.all(8),
-                      child: Icon(
-                        socialItem.icon,
-                        color: AppColors.secondColor,
-                        size: 55,
+                      child: Draggable<SocialItemModel>(
+                        data: socialItem,
+                        feedback: Icon(
+                          socialItem.icon,
+                          color: AppColors.secondColor,
+                          size: 55,
+                        ),
+                        childWhenDragging: Icon(
+                          socialItem.icon,
+                          color: AppColors.secondColor.withOpacity(0.3),
+                          size: 55,
+                        ),
+                        child: Icon(
+                          socialItem.icon,
+                          color: AppColors.secondColor,
+                          size: 55,
+                        ),
                       ),
                     );
                   }).toList(),
                 ),
                 Spacer(),
+
                 // column with titles
                 Column(
                   children: socialItems2.map((socialItem) {
-                    return Container(
-                      color: AppColors.secondColor,
-                      height: 55,
-                      width: 110,
-                      alignment: Alignment.center,
-                      margin: const EdgeInsets.all(8),
-                      child: Text(
-                        socialItem.name,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                    return DragTarget<SocialItemModel>(
+                      onAccept: (receivedItem) {
+                        if (socialItem.value == receivedItem.value) {
+                          setState(() {
+                            socialItems.remove(receivedItem);
+                            socialItems2.remove(socialItem);
+                            score += 10;
+                            socialItem.accepting = false;
+                          });
+                        } else {
+                          setState(() {
+                            score -= 5;
+                            socialItem.accepting = false;
+                          });
+                        }
+                      },
+                      onWillAccept: (receivedItem) {
+                        setState(() {
+                          socialItem.accepting = true;
+                        });
+                        return true;
+                      },
+                      onLeave: (receivedItem) {
+                        setState(() {
+                          socialItem.accepting = false;
+                        });
+                      },
+                      builder: (context, candidateData, rejectedData) =>
+                          Container(
+                        color: socialItem.accepting
+                            ? AppColors.secondColor.withOpacity(0.3)
+                            : AppColors.secondColor,
+                        height: 55,
+                        width: 110,
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.all(8),
+                        child: Text(
+                          socialItem.name,
+                          style: const TextStyle(
+                            color: Color(0xFF283044),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
                         ),
                       ),
                     );
                   }).toList(),
                 ),
               ],
-            )
+            ),
+            SizedBox(height: 15),
+
+            // restart button
+            if (restart)
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    restart = true;
+                    initGame();
+                  });
+                },
+                child: Text(
+                  'Restart',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.secondColor,
+                  foregroundColor: AppColors.mainColor,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 7,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
